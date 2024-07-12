@@ -19,11 +19,11 @@ func NewRenderSystem() *RenderSystem {
 }
 
 func (rs *RenderSystem) Update(registry *core.Registry) {
-	posType := reflect.TypeOf(&components.PositionComponent{})
+	transfType := reflect.TypeOf(&components.TransformComponent{})
 
-	for _, p := range registry.GetAllComponentsOfType(posType) {
-		pos := p.(*components.PositionComponent)
-		vector.DrawFilledRect(rs.Screen, pos.X, pos.Y, 10, 10, color.White, false)
+	for _, p := range registry.GetAllComponentsOfType(transfType) {
+		transf := p.(*components.TransformComponent)
+		vector.DrawFilledRect(rs.Screen, transf.Position.X, transf.Position.Y, 10, 10, color.White, false)
 	}
 
 }

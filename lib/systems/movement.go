@@ -14,26 +14,23 @@ func NewMovementSystem() *MovementSystem {
 }
 
 func (ms *MovementSystem) Update(registry *core.Registry) {
-	posType := reflect.TypeOf(&components.PositionComponent{})
-	velType := reflect.TypeOf(&components.VelocityComponent{})
 	ctrlType := reflect.TypeOf(&components.ControlsComponent{})
 
-	for entity, velo := range registry.GetAllComponentsOfType(velType) {
-		velocity := velo.(*components.VelocityComponent)
-		position := registry.GetComponent(posType, entity).(*components.PositionComponent)
+	transfType := reflect.TypeOf(&components.TransformComponent{})
+	for entity, transf := range registry.GetAllComponentsOfType(transfType) {
+		transformComponent := transf.(*components.TransformComponent)
 		controls := registry.GetComponent(ctrlType, entity).(*components.ControlsComponent)
-		velocity.DX = 0
-		velocity.DY = 0
+		transformComponent.Velocity.DX = 0
+		transformComponent.Velocity.DY = 0
+		transformComponent.Speed = 1
 
-		if len(controls.ControlsBuffer) > 0 {
-			currentKey := controls.ControlsBuffer[len(controls.ControlsBuffer)-1]
-			if currentControl := controls.Controls[currentKey]; currentControl != nil {
-				currentControl(velocity)
+		for _, key := range controls.ControlsBuffer {
+			if ctrl := controls.Controls[key]; ctrl != nil {
+				ctrl(transformComponent)
 			}
 		}
 
-		position.X += velocity.DX
-		position.Y += velocity.DY
+		transformComponent.Position.X += transformComponent.Speed * transformComponent.Velocity.DX
+		transformComponent.Position.Y += transformComponent.Speed * transformComponent.Velocity.DY
 	}
-
 }

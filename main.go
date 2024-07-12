@@ -7,6 +7,7 @@ import (
 	"github.com/Djosar/kro-ecs/lib/components"
 	"github.com/Djosar/kro-ecs/lib/core"
 	"github.com/Djosar/kro-ecs/lib/systems"
+	"github.com/Djosar/kro-ecs/lib/util"
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
@@ -45,20 +46,24 @@ func main() {
 	renderer := systems.NewRenderSystem()
 	movement := systems.NewMovementSystem()
 	input := systems.NewInputSystem()
-	pos1 := &components.PositionComponent{
-		X: 100,
-		Y: 100,
-	}
-	velo1 := &components.VelocityComponent{
-		DX: 0,
-		DY: 0,
+	transform1 := &components.TransformComponent{
+		Position: util.Coordinate[float32]{
+			X: 0,
+			Y: 0,
+		},
+		Speed: 1,
+		Velocity: util.Velocity{
+			DX: 0,
+			DY: 0,
+		},
 	}
 	ctrls := &components.ControlsComponent{
-		Controls: map[ebiten.Key]func(*components.VelocityComponent){
-			ebiten.KeyW: func(vc *components.VelocityComponent) { vc.DY = -1; vc.DX = 0 },
-			ebiten.KeyD: func(vc *components.VelocityComponent) { vc.DX = 1; vc.DY = 0 },
-			ebiten.KeyS: func(vc *components.VelocityComponent) { vc.DY = 1; vc.DX = 0 },
-			ebiten.KeyA: func(vc *components.VelocityComponent) { vc.DX = -1; vc.DY = 0 },
+		Controls: map[ebiten.Key]func(*components.TransformComponent){
+			ebiten.KeyW:     func(transformComponent *components.TransformComponent) { transformComponent.Velocity.DY = -1 },
+			ebiten.KeyD:     func(transformComponent *components.TransformComponent) { transformComponent.Velocity.DX = 1 },
+			ebiten.KeyS:     func(transformComponent *components.TransformComponent) { transformComponent.Velocity.DY = 1 },
+			ebiten.KeyA:     func(transformComponent *components.TransformComponent) { transformComponent.Velocity.DX = -1 },
+			ebiten.KeyShift: func(transformComponent *components.TransformComponent) { transformComponent.Speed = 2 },
 		},
 	}
 
@@ -66,8 +71,7 @@ func main() {
 	game.registry.AddSystem(input)
 	game.registry.AddSystem(movement)
 
-	game.registry.AddComponent(0, pos1)
-	game.registry.AddComponent(0, velo1)
+	game.registry.AddComponent(0, transform1)
 	game.registry.AddComponent(0, ctrls)
 
 	ebiten.SetWindowSize(640, 480)
