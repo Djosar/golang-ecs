@@ -18,7 +18,7 @@ func (iss *InputSystem) Update(registry *core.Registry) {
 	controlsType := reflect.TypeOf(&components.ControlsComponent{})
 	for _, component := range registry.GetAllComponentsOfType(controlsType) {
 		controlsComponent := component.(*components.ControlsComponent)
-		for key, _ := range controlsComponent.Controls {
+		for key := range controlsComponent.Controls {
 			if inpututil.IsKeyJustPressed(key) {
 				controlsComponent.ControlsBuffer = append(controlsComponent.ControlsBuffer, key)
 			}
