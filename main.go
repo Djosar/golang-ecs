@@ -91,10 +91,10 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	/*sprintSpriteFile, _, err := image.Decode(bytes.NewReader(assets.RunSpriteSheet))
+	sprintSpriteFile, _, err := image.Decode(bytes.NewReader(assets.RunSpriteSheet))
 	if err != nil {
 		log.Fatal(err)
-	}*/
+	}
 
 	animations := &components.AnimationComponent{
 		CurrentAnimation: "idle_down",
@@ -227,7 +227,7 @@ func main() {
 				60,
 				10,
 			),
-			/*"sprint_up": util.NewAnimation(
+			"sprint_up": util.NewAnimation(
 				util.GenerateFrames(
 					ebiten.NewImageFromImage(sprintSpriteFile),
 					80, 80,
@@ -298,7 +298,7 @@ func main() {
 				),
 				60,
 				10,
-			),*/
+			),
 		},
 		AnimationHandlers: map[components.AnimationIdentifier]func(*components.TransformComponent) bool{
 			"idle_up": func(tc *components.TransformComponent) bool {
