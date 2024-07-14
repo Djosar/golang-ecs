@@ -1,13 +1,11 @@
 package systems
 
 import (
-	"image/color"
 	"reflect"
 
 	"github.com/Djosar/kro-ecs/lib/components"
 	"github.com/Djosar/kro-ecs/lib/core"
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/vector"
 )
 
 type RenderSystem struct {
@@ -20,10 +18,18 @@ func NewRenderSystem() *RenderSystem {
 
 func (rs *RenderSystem) Update(registry *core.Registry) {
 	transfType := reflect.TypeOf(&components.TransformComponent{})
+	animType := reflect.TypeOf(&components.AnimationComponent{})
 
-	for _, p := range registry.GetAllComponentsOfType(transfType) {
+	for entity, p := range registry.GetAllComponentsOfType(transfType) {
 		transf := p.(*components.TransformComponent)
-		vector.DrawFilledRect(rs.Screen, transf.Position.X, transf.Position.Y, 10, 10, color.White, false)
+		animationComp := registry.GetComponent(animType, entity).(*components.AnimationComponent)
+		currentAnimation := animationComp.GetCurrentAnimation()
+		if currentAnimation != nil {
+			opts := &ebiten.DrawImageOptions{}
+			opts.GeoM.Translate(float64(transf.Position.X), float64(transf.Position.Y))
+			currentFrame := currentAnimation.GetCurrentFrame()
+			rs.Screen.DrawImage(currentFrame, opts)
+		}
 	}
 
 }

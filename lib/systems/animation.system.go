@@ -1,7 +1,6 @@
 package systems
 
 import (
-	"fmt"
 	"reflect"
 
 	"github.com/Djosar/kro-ecs/lib/components"
@@ -28,6 +27,19 @@ func (as *AnimationSystem) Update(registry *core.Registry) {
 			}
 		}
 
-		fmt.Println(animationComp.CurrentAnimation)
+		if currentAnimation := animationComp.Animations[animationComp.CurrentAnimation]; currentAnimation != nil {
+			if currentAnimation.Counter < currentAnimation.Marker {
+				if currentAnimation.Counter%currentAnimation.AnimationSpeed == 0 {
+					if currentAnimation.FrameIndex < (len(currentAnimation.Frames) - 1) {
+						currentAnimation.FrameIndex += 1
+					} else {
+						currentAnimation.FrameIndex = 0
+					}
+				}
+				currentAnimation.Counter += 1
+			} else {
+				currentAnimation.Counter = 0
+			}
+		}
 	}
 }
