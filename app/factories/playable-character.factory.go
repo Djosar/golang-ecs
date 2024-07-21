@@ -25,6 +25,7 @@ func PlayableCharacterFactory(registry *core.Registry) (core.Entity, error) {
 			DY: 0,
 		},
 	}
+
 	controls := &components.ControlsComponent{
 		Controls: map[ebiten.Key]func(*components.TransformComponent){
 			ebiten.KeyW: func(transformComponent *components.TransformComponent) {
