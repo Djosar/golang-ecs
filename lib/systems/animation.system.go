@@ -7,12 +7,28 @@ import (
 	"github.com/Djosar/kro-ecs/lib/core"
 )
 
+// AnimationSystem is responsible for updating animation components
+// within the entity-component-system (ECS) architecture. It handles the
+// transition of animation states based on the provided handlers and updates
+// the current frame of each animation.
 type AnimationSystem struct{}
 
+// NewAnimationSystem creates and returns a new instance of AnimationSystem.
+//
+// Returns:
+//
+//	*AnimationSystem: A pointer to the newly created AnimationSystem instance.
 func NewAnimationSystem() *AnimationSystem {
 	return &AnimationSystem{}
 }
 
+// Update iterates through all entities that have both a TransformComponent and
+// an AnimationComponent. It updates the animation state of each entity based on
+// the provided handlers and advances the animation frames.
+//
+// Parameters:
+//
+//	registry (*core.Registry): The registry containing all entities and components in the ECS.
 func (as *AnimationSystem) Update(registry *core.Registry) {
 	transfType := reflect.TypeOf(&components.TransformComponent{})
 	animType := reflect.TypeOf(&components.AnimationComponent{})

@@ -10,19 +10,40 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
+// PlayerAnimationComponentFactory creates and returns an AnimationComponent
+// for the player character, initializing it with different animations for
+// various actions and directions such as idle, walking, and sprinting.
+// It returns a pointer to the AnimationComponent and an error if there is an
+// issue decoding the sprite sheets.
+//
+// The animations are created using sprite sheets from the assets package.
+// Each animation is defined by frames generated from these sprite sheets and
+// associated with an AnimationIdentifier.
+//
+// Returns:
+//
+//	*components.AnimationComponent: A pointer to the created AnimationComponent.
+//	error: An error if there is an issue during the sprite sheet decoding process.
 func PlayerAnimationComponentFactory() (*components.AnimationComponent, error) {
+	// Decode the idle sprite sheet from assets
 	idleSpriteFile, _, err := image.Decode(bytes.NewReader(assets.IdleSpriteSheet))
 	if err != nil {
 		return nil, err
 	}
+
+	// Decode the walk sprite sheet from assets
 	walkSpriteFile, _, err := image.Decode(bytes.NewReader(assets.WalkSpriteSheet))
 	if err != nil {
 		return nil, err
 	}
+
+	// Decode the run (sprint) sprite sheet from assets
 	sprintSpriteFile, _, err := image.Decode(bytes.NewReader(assets.RunSpriteSheet))
 	if err != nil {
 		return nil, err
 	}
+
+	// Create and return the AnimationComponent with the defined animations and handlers
 	return &components.AnimationComponent{
 		CurrentAnimation: "idle_down",
 		Animations: map[components.AnimationIdentifier]*util.Animation{

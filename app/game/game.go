@@ -10,11 +10,20 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
+// Game represents the main game structure. It holds the registry of all entities
+// and systems, and the player entity.
 type Game struct {
 	Registry     *core.Registry
 	PlayerEntity core.Entity
 }
 
+// NewGame initializes and returns a new Game instance. It sets up the registry,
+// adds systems to it, and creates the player entity.
+//
+// Returns:
+//
+//	*Game: A pointer to the newly created Game instance.
+//	error: An error if the player entity cannot be created.
 func NewGame() (*Game, error) {
 	registry := core.NewRegistry()
 
@@ -55,9 +64,7 @@ func (g *Game) Update() error {
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
-	// Write your game's rendering.
 	renderer := g.Registry.GetSystem(reflect.TypeOf(&systems.RenderSystem{}))
-
 	renderer.(*systems.RenderSystem).Screen = screen
 	renderer.Update(g.Registry)
 }
